@@ -80,4 +80,14 @@ describe("API testing", () => {
         });
     });
   });
+  describe("/api/articles/:article_id", () => {
+    test.only("return correct article when passed an article id ", () => {
+      return request(app)
+        .get("/api/articles/2")
+        .expect(200)
+        .then(({ body: { articles } }) => {
+          console.log(articles);
+        });
+    });
+  });
 });

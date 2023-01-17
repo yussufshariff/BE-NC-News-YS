@@ -1,9 +1,14 @@
 const express = require("express");
 const app = express();
-const { getAllTopics, getAllArticles } = require("../controllers/controllers");
+const {
+  getAllTopics,
+  getAllArticles,
+  getAllArticlesByID,
+} = require("../controllers/controllers");
 
 app.get("/api/topics", getAllTopics);
 app.get("/api/articles", getAllArticles);
+app.get("/api/articles/:article_id", getAllArticlesByID);
 
 app.use((error, request, response, next) => {
   if (error.status && error.msg) {
