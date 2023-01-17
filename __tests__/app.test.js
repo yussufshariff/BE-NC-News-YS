@@ -86,21 +86,23 @@ describe("API testing", () => {
         .get("/api/articles/1")
         .expect(200)
         .then(({ body }) => {
-          expect(body.articles).toEqual({
-            article_id: 1,
-            title: "Living in the shadow of a great man",
-            topic: "mitch",
-            author: "butter_bridge",
-            body: "I find this existence challenging",
-            created_at: "2020-07-09T20:11:00.000Z",
-            votes: 100,
-            article_img_url:
-              "https://images.pexels.com/photos/158651/news-newsletter-newspaper-information-158651.jpeg?w=700&h=700",
+          expect(body).toEqual({
+            articles: {
+              article_id: 1,
+              title: "Living in the shadow of a great man",
+              topic: "mitch",
+              author: "butter_bridge",
+              body: "I find this existence challenging",
+              created_at: "2020-07-09T20:11:00.000Z",
+              votes: 100,
+              article_img_url:
+                "https://images.pexels.com/photos/158651/news-newsletter-newspaper-information-158651.jpeg?w=700&h=700",
+            },
           });
           expect(Object.keys(body.articles)).toHaveLength(8);
         });
     });
-    test("for articles with invalid ids we should expect a 404 error", () => {
+    test("for articles with non existent ids we should expect a 404 error", () => {
       return request(app)
         .get("/api/articles/4311462")
         .expect(404)
@@ -112,16 +114,28 @@ describe("API testing", () => {
   describe("/api/articles/:article_id/comments", () => {
     test("returns an array of comments with appropriate properties", () => {
       return request(app)
-        .get("/api/articles/1/comments")
+        .get("/api/articles/3/comments")
         .expect(200)
         .then(({ body }) => {
-          expect(body.comments).toEqual({
-            article_id: 1,
-            author: "icellusedkars",
-            body: "I hate streaming noses",
-            comment_id: 5,
-            created_at: "2020-11-03T21:00:00.000Z",
-            votes: 0,
+          expect(body).toEqual({
+            comments: [
+              {
+                comment_id: 11,
+                body: "Ambidextrous marsupial",
+                article_id: 3,
+                author: "icellusedkars",
+                votes: 0,
+                created_at: "2020-09-19T23:10:00.000Z",
+              },
+              {
+                comment_id: 10,
+                body: "git push origin master",
+                article_id: 3,
+                author: "icellusedkars",
+                votes: 0,
+                created_at: "2020-06-20T07:24:00.000Z",
+              },
+            ],
           });
         });
     });
@@ -129,24 +143,18 @@ describe("API testing", () => {
       return request(app)
         .get("/api/articles/1/comments")
         .expect(200)
-        .then(({ body }) => {
-          expect(body.comments).not.toEqual({
-            author: "butter_bridge",
-            body: "The beautiful thing about treasure is that it exists. Got to find out what kind of sheets these are; not cotton, not rayon, silky.",
-            comment_id: 2,
-            created_at: "2020-10-31T03:03:00.000Z",
-            votes: 14,
-          });
+        .then(({ body: { comments } }) => {
+          expect(comments).toBeSorted({ descending: true });
         });
     });
+  });
 
-    test("404 error for endpoint request to non existent articles ", () => {
-      return request(app)
-        .get("/api/articles/98/comments")
-        .expect(404)
-        .then(({ body }) => {
-          expect(body.msg).toBe("Article not found");
-        });
-    });
+  test("404 error for endpoint request to non existent articles ", () => {
+    return request(app)
+      .get("/api/articles/98/comments")
+      .expect(404)
+      .then(({ body }) => {
+        expect(body.msg).toBe("Article not found");
+      });
   });
 });

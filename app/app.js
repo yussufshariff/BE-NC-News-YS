@@ -3,13 +3,13 @@ const app = express();
 const {
   getAllTopics,
   getAllArticles,
-  getAllArticlesByID,
+  getArticlesByID,
   getComments,
 } = require("../controllers/controllers");
 
 app.get("/api/topics", getAllTopics);
 app.get("/api/articles", getAllArticles);
-app.get("/api/articles/:article_id", getAllArticlesByID);
+app.get("/api/articles/:article_id", getArticlesByID);
 app.get("/api/articles/:article_id/comments", getComments);
 
 app.use((error, request, response, next) => {

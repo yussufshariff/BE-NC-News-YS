@@ -25,7 +25,7 @@ exports.getAllArticles = (request, response, next) => {
     });
 };
 
-exports.getAllArticlesByID = (request, response, next) => {
+exports.getArticlesByID = (request, response, next) => {
   const { article_id } = request.params;
   fetchArticlesByID(article_id)
     .then((articles) => {
@@ -41,7 +41,7 @@ exports.getComments = (request, response, next) => {
       return fetchComments(article_id);
     })
     .then((comments) => {
-      response.status(200).send({ comments });
+      response.status(200).send({ comments: comments });
     })
     .catch(next);
 };
