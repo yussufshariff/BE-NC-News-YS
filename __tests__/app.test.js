@@ -67,10 +67,7 @@ describe("API testing", () => {
         .get("/api/articles")
         .expect(200)
         .then(({ body: { topics } }) => {
-          expect(topics[0].created_at).toBe("2020-11-03T09:12:00.000Z");
-          expect(topics[topics.length - 1].created_at).toBe(
-            "2020-01-07T14:08:00.000Z"
-          );
+          expect(topics).toBeSorted({ descending: true });
         });
     });
     test("comment count should be different according to the total comments in any given article ", () => {
@@ -80,6 +77,35 @@ describe("API testing", () => {
         .then(({ body: { topics } }) => {
           expect(topics[5].comment_count).toBe("11");
           expect(topics[topics.length - 1].comment_count).toBe("0");
+        });
+    });
+  });
+  describe("/api/articles/:article_id", () => {
+    test("return correct article when passed an article id ", () => {
+      return request(app)
+        .get("/api/articles/1")
+        .expect(200)
+        .then(({ body }) => {
+          expect(body.articles).toEqual({
+            article_id: 1,
+            title: "Living in the shadow of a great man",
+            topic: "mitch",
+            author: "butter_bridge",
+            body: "I find this existence challenging",
+            created_at: "2020-07-09T20:11:00.000Z",
+            votes: 100,
+            article_img_url:
+              "https://images.pexels.com/photos/158651/news-newsletter-newspaper-information-158651.jpeg?w=700&h=700",
+          });
+          expect(Object.keys(body.articles)).toHaveLength(8);
+        });
+    });
+    test("for articles with invalid ids we should expect a 404 error", () => {
+      return request(app)
+        .get("/api/articles/4311462")
+        .expect(404)
+        .then(({ body }) => {
+          expect(body.msg).toBe("article not found");
         });
     });
   });

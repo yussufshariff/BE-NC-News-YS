@@ -1,5 +1,5 @@
 const db = require("../db/connection");
-const topics = require("../db/data/test-data/topics");
+const articles = require("../db/data/test-data/articles");
 
 exports.fetchTopics = () => {
   return db.query(`SELECT * FROM topics`).then(({ rows: topics }) => {
@@ -16,4 +16,14 @@ exports.fetchArticles = () => {
     .then(({ rows: articles }) => {
       return articles;
     });
+};
+
+exports.fetchArticlesByID = (article_id) => {
+  const query = `SELECT * FROM articles WHERE articles.article_id =$1`;
+  return db.query(query, [article_id]).then(({ rows, rowCount }) => {
+    if (rowCount === 0) {
+      return Promise.reject({ status: 404, msg: "article not found" });
+    }
+    return rows[0];
+  });
 };
