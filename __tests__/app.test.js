@@ -81,12 +81,34 @@ describe("API testing", () => {
     });
   });
   describe("/api/articles/:article_id", () => {
-    test.only("return correct article when passed an article id ", () => {
+    test("return correct article when passed an article id ", () => {
       return request(app)
-        .get("/api/articles/2")
+        .get("/api/articles/1")
         .expect(200)
-        .then(({ body: { articles } }) => {
-          console.log(articles);
+        .then(({ body }) => {
+          expect(body.articles).toHaveLength(1);
+          body.articles.forEach((article) => {
+            expect(article).toEqual(
+              expect.objectContaining({
+                article_id: expect.any(Number),
+                article_img_url: expect.any(String),
+                author: expect.any(String),
+                body: expect.any(String),
+                created_at: expect.any(String),
+                title: expect.any(String),
+                topic: expect.any(String),
+                votes: expect.any(Number),
+              })
+            );
+          });
+        });
+    });
+    test("for articles with invalid ids we should expect a 404 error", () => {
+      return request(app)
+        .get("/api/articles/4311462")
+        .expect(404)
+        .then(({ body }) => {
+          expect(body.msg).toBe("article not found");
         });
     });
   });

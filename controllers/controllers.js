@@ -30,7 +30,5 @@ exports.getAllArticlesByID = (request, response, next) => {
     .then((articles) => {
       response.status(200).send({ articles });
     })
-    .catch((error) => {
-      next(error);
-    });
+    .catch(next);
 };
