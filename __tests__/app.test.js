@@ -125,7 +125,22 @@ describe("API testing", () => {
           });
         });
     });
-    test("Comments should have the most recent comment first", () => {
+    test("comments should return the most recent one first ", () => {
+      return request(app)
+        .get("/api/articles/1/comments")
+        .expect(200)
+        .then(({ body }) => {
+          expect(body.comments).not.toEqual({
+            author: "butter_bridge",
+            body: "The beautiful thing about treasure is that it exists. Got to find out what kind of sheets these are; not cotton, not rayon, silky.",
+            comment_id: 2,
+            created_at: "2020-10-31T03:03:00.000Z",
+            votes: 14,
+          });
+        });
+    });
+
+    test("404 error for endpoint request to non existent articles ", () => {
       return request(app)
         .get("/api/articles/98/comments")
         .expect(404)
