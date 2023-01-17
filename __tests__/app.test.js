@@ -67,10 +67,7 @@ describe("API testing", () => {
         .get("/api/articles")
         .expect(200)
         .then(({ body: { topics } }) => {
-          expect(topics[0].created_at).toBe("2020-11-03T09:12:00.000Z");
-          expect(topics[topics.length - 1].created_at).toBe(
-            "2020-01-07T14:08:00.000Z"
-          );
+          expect(topics).toBeSorted({ descending: true });
         });
     });
     test("comment count should be different according to the total comments in any given article ", () => {

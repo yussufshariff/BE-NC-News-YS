@@ -12,7 +12,7 @@ app.use((error, request, response, next) => {
     next(error);
   }
 });
-app.use((request, response) => {
+app.use((request, response, next) => {
   response.status(404).send({ msg: "URL not found" });
 });
 app.use((error, request, response, next) => {
