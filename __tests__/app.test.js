@@ -105,17 +105,32 @@ describe("API testing", () => {
         .get("/api/articles/4311462")
         .expect(404)
         .then(({ body }) => {
-          expect(body.msg).toBe("article not found");
+          expect(body.msg).toBe("Article not found");
         });
     });
   });
   describe("/api/articles/:article_id/comments", () => {
-    test.only("returns an array of comments with appropriate properties", () => {
+    test("returns an array of comments with appropriate properties", () => {
       return request(app)
         .get("/api/articles/1/comments")
         .expect(200)
         .then(({ body }) => {
-          console.log(body);
+          expect(body.comments).toEqual({
+            article_id: 1,
+            author: "icellusedkars",
+            body: "I hate streaming noses",
+            comment_id: 5,
+            created_at: "2020-11-03T21:00:00.000Z",
+            votes: 0,
+          });
+        });
+    });
+    test("Comments should have the most recent comment first", () => {
+      return request(app)
+        .get("/api/articles/98/comments")
+        .expect(404)
+        .then(({ body }) => {
+          expect(body.msg).toBe("Article not found");
         });
     });
   });
