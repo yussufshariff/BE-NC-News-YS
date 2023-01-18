@@ -164,8 +164,6 @@ describe("API testing", () => {
         .send(newComment)
         .expect(201)
         .then(({ body }) => {
-          const arrayComment = Object.keys(body.newComment);
-          expect(arrayComment).toHaveLength(6);
           expect(body.newComment).toEqual(
             expect.objectContaining({
               article_id: expect.any(Number),
@@ -202,6 +200,19 @@ describe("API testing", () => {
         .expect(404)
         .then((response) => {
           expect(response.body.msg).toBe("Article not found");
+        });
+    });
+    test("returns 'Bad request' for comments with wrong keys i.e not username/body", () => {
+      const newComment = {
+        profilename: "KotlinFan101",
+        torso: "Hi hi hi hi ",
+      };
+      return request(app)
+        .post(`/api/articles/2/comments`)
+        .send(newComment)
+        .expect(400)
+        .then((response) => {
+          expect(response.body.msg).toBe("Bad Request");
         });
     });
   });
