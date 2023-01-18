@@ -3,6 +3,7 @@ const {
   fetchArticles,
   fetchArticlesByID,
   fetchComments,
+  postComments,
 } = require("../models/models");
 
 exports.getAllTopics = (request, response, next) => {
@@ -42,6 +43,19 @@ exports.getComments = (request, response, next) => {
     })
     .then((comments) => {
       response.status(200).send({ comments: comments });
+    })
+    .catch(next);
+};
+
+exports.addComment = (request, response, next) => {
+  const { article_id } = request.params;
+  const { body, username } = request.body;
+  fetchArticlesByID(article_id)
+    .then(() => {
+      return postComments(username, body, article_id);
+    })
+    .then((newComment) => {
+      response.status(201).send({ newComment });
     })
     .catch(next);
 };
