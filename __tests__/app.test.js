@@ -215,5 +215,14 @@ describe("API testing", () => {
           expect(response.body.msg).toBe("Bad Request");
         });
     });
+    test("returns 'Bad request' when an empty object is sent through", () => {
+      return request(app)
+        .post(`/api/articles/2/comments`)
+        .send({})
+        .expect(400)
+        .then((response) => {
+          expect(response.body.msg).toBe("Bad Request");
+        });
+    });
   });
 });
