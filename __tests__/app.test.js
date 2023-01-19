@@ -86,12 +86,13 @@ describe("NCNews API testing", () => {
           .expect(200)
           .then((response) => {
             const articles = response.body.articles;
+            expect(articles.length).toBe(1);
             articles.forEach((article) => {
               expect(article.topic).toBe("cats");
             });
           });
       });
-      test.only("sort articles by article id in descending order  ", () => {
+      test("sort articles by article id in descending order  ", () => {
         return request(app)
           .get("/api/articles?sort_by=article_id")
           .expect(200)
@@ -101,15 +102,23 @@ describe("NCNews API testing", () => {
       });
       test("be able to specify an article order i.e ascending or descending ", () => {
         return request(app)
-          .get("/api/articles?sort_by=article_id&&order=asc")
+          .get("/api/articles?topic=mitch&&sort_by=article_id&&order=asc")
           .expect(200)
           .then(({ body: { articles } }) => {
             expect(articles).toBeSortedBy("article_id", { descending: false });
           });
       });
-      test("return 'Query request invalid!' for invalid sort by query or order", () => {
+      test("return 'Query request invalid!' for invalid sort by", () => {
         return request(app)
-          .get("/api/articles?sort_by=banana&&order=slide")
+          .get("/api/articles?sort_by=banana")
+          .expect(400)
+          .then((response) => {
+            expect(response.body.msg).toBe("Query request is invalid.");
+          });
+      });
+      test("return 'Query request invalid!' for invalid order", () => {
+        return request(app)
+          .get("/api/articles?order=Goku")
           .expect(400)
           .then((response) => {
             expect(response.body.msg).toBe("Query request is invalid.");
