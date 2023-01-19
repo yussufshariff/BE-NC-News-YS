@@ -7,6 +7,7 @@ const {
   alterVotes,
   fetchUsers,
   fetchQuery,
+  deleteComment,
 } = require("../models/models");
 
 exports.getAllTopics = (request, response, next) => {
@@ -84,4 +85,13 @@ exports.getAllUsers = (request, response, next) => {
     .catch((error) => {
       next(error);
     });
+};
+
+exports.removeComment = (request, response, next) => {
+  const { comment_id } = request.params;
+  deleteComment(comment_id)
+    .then((comment) => {
+      response.status(204).send({ comment });
+    })
+    .catch(next);
 };

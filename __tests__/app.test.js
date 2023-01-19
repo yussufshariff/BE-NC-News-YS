@@ -127,7 +127,7 @@ describe("NCNews API testing", () => {
     });
   });
   describe("GET/api/articles/:article_id", () => {
-    test.only("return correct article when passed an article id ", () => {
+    test("return correct article when passed an article id ", () => {
       return request(app)
         .get("/api/articles/1")
         .expect(200)
@@ -363,6 +363,11 @@ describe("NCNews API testing", () => {
         .then(({ body }) => {
           expect(body.msg).toBe("URL not found");
         });
+    });
+  });
+  describe("DELETE/api/comments/id", () => {
+    test.only("deletes the comment when given and id and responds with status 204", () => {
+      return request(app).delete("/api/comments/1").expect(204);
     });
   });
 });
