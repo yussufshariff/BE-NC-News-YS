@@ -58,3 +58,9 @@ exports.alterVotes = (article_id, inc_votes) => {
     return rows;
   });
 };
+
+exports.fetchUsers = () => {
+  return db.query(`SELECT * FROM users`).then(({ rows: users }) => {
+    return users;
+  });
+};

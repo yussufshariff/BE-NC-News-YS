@@ -5,6 +5,7 @@ const {
   fetchComments,
   postComments,
   alterVotes,
+  fetchUsers,
 } = require("../models/models");
 
 exports.getAllTopics = (request, response, next) => {
@@ -72,4 +73,13 @@ exports.updateVotes = (request, response, next) => {
       response.status(200).send({ article });
     })
     .catch(next);
+};
+exports.getAllUsers = (request, response, next) => {
+  fetchUsers()
+    .then((users) => {
+      response.status(200).send({ users });
+    })
+    .catch((error) => {
+      next(error);
+    });
 };
