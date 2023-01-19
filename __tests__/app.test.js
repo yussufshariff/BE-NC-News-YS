@@ -366,10 +366,15 @@ describe("NCNews API testing", () => {
     });
   });
   describe("DELETE/api/comments/id", () => {
-    test.only("deletes the comment when given and id and responds with status 204", () => {
-      return request(app).delete("/api/comments/1").expect(204);
+    test("deletes the comment when given and id and responds with status 204", () => {
+      return request(app)
+        .delete("/api/comments/1")
+        .expect(204)
+        .then((response) => {
+          expect(response.noContent).toBe(true);
+        });
     });
-    test.only("After a comment is deleted we should expect a 404 error code as the comment shouldnt exist", () => {
+    test("After a comment is deleted we should expect a 404 error code as the comment shouldnt exist", () => {
       return request(app)
         .get("/api/comments/1")
         .expect(404)
