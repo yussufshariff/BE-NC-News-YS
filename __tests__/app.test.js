@@ -80,7 +80,7 @@ describe("NCNews API testing", () => {
         });
     });
     describe("QUERY/api/articles", () => {
-      test("Should filter the topic by specified query in this case...only cat topics allowed! ", () => {
+      test("return filter the topic by specified query in this case...only cat topics allowed! ", () => {
         return request(app)
           .get("/api/articles?topic=cats")
           .expect(200)
@@ -91,7 +91,7 @@ describe("NCNews API testing", () => {
             });
           });
       });
-      test("Should sort articles by article id in descending order  ", () => {
+      test("sort articles by article id in descending order  ", () => {
         return request(app)
           .get("/api/articles?sort_by=article_id")
           .expect(200)
@@ -101,7 +101,7 @@ describe("NCNews API testing", () => {
             );
           });
       });
-      test("Should be able to specify an article order i.e ascending or descending ", () => {
+      test("be able to specify an article order i.e ascending or descending ", () => {
         return request(app)
           .get("/api/articles?sort_by=article_id&&order=asc")
           .expect(200)
@@ -111,7 +111,7 @@ describe("NCNews API testing", () => {
             );
           });
       });
-      test.only("Should return 'Query request invalid!' for invalid sort by query or order", () => {
+      test("return 'Query request invalid!' for invalid sort by query or order", () => {
         return request(app)
           .get("/api/articles?sort_by=banana&&order=slide")
           .expect(400)
