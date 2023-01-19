@@ -6,7 +6,7 @@ exports.fetchTopics = () => {
     return topics;
   });
 };
-exports.fetchArticles = (topic) => {
+exports.fetchArticles = (topic, sort_by = "created_at", order = "desc") => {
   const queryValues = [];
   let queryString = `SELECT articles.* , COUNT(comments.article_id) AS comment_count FROM articles 
   LEFT JOIN comments ON articles.article_id = comments.article_id 
@@ -14,7 +14,9 @@ exports.fetchArticles = (topic) => {
 
   if (topic !== undefined) {
     queryValues.push(topic);
-    queryString += `WHERE topic LIKE $1 GROUP BY articles.article_id ORDER BY articles.created_at DESC`;
+    queryString += `WHERE topic LIKE $1 GROUP BY articles.article_id ORDER BY ${sort_by} ${order}`;
+  } else {
+    queryString += `GROUP BY articles.article_id ORDER BY ${sort_by} ${order}`;
   }
   return db.query(queryString, queryValues).then(({ rows: articles }) => {
     return articles;

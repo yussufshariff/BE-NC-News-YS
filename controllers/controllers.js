@@ -20,8 +20,8 @@ exports.getAllTopics = (request, response, next) => {
 };
 
 exports.getAllArticles = (request, response, next) => {
-  const { topic } = request.query;
-  fetchArticles(topic)
+  const { topic, sort_by, order } = request.query;
+  fetchArticles(topic, sort_by, order)
     .then((topics) => {
       response.status(200).send({ topics });
     })
