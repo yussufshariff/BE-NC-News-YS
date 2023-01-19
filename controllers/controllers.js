@@ -8,6 +8,7 @@ const {
   fetchUsers,
   fetchQuery,
   deleteComment,
+  fetchCommentsByID,
 } = require("../models/models");
 
 exports.getAllTopics = (request, response, next) => {
@@ -89,9 +90,11 @@ exports.getAllUsers = (request, response, next) => {
 
 exports.removeComment = (request, response, next) => {
   const { comment_id } = request.params;
-  deleteComment(comment_id)
+  fetchCommentsByID(comment_id)
     .then(() => {
-      response.status(204).send();
+      deleteComment(comment_id).then(() => {
+        response.status(204).send();
+      });
     })
     .catch(next);
 };

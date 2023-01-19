@@ -382,12 +382,13 @@ describe("NCNews API testing", () => {
           expect(response.body.msg).toBe("URL not found");
         });
     });
-    test.only("returns 'Bad request' when you try to delete with wrong data type", () => {
+    test("returns 'Comment not found' when you try to delete a non existent comment", () => {
       return request(app)
-        .delete("/api/comments/vegeta")
-        .expect(400)
+        .delete("/api/comments/412")
+        .expect(404)
         .then((response) => {
-          expect(response.body.msg).toBe("Bad Request");
+          console.log(response);
+          expect(response.body.msg).toBe(`Comment 412 was not found`);
         });
     });
   });
