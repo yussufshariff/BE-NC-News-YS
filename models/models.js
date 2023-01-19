@@ -50,7 +50,10 @@ exports.fetchArticlesByID = (article_id) => {
   GROUP BY articles.article_id ORDER BY articles.created_at DESC`;
   return db.query(query, [article_id]).then(({ rows, rowCount }) => {
     if (rowCount === 0) {
-      return Promise.reject({ status: 404, msg: "Article not found" });
+      return Promise.reject({
+        status: 404,
+        msg: `Article ${article_id} was not found`,
+      });
     }
     return rows[0];
   });

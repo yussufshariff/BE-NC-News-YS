@@ -154,7 +154,7 @@ describe("NCNews API testing", () => {
         .get("/api/articles/4311462")
         .expect(404)
         .then(({ body }) => {
-          expect(body.msg).toBe("Article not found");
+          expect(body.msg).toBe("Article 4311462 was not found");
         });
     });
   });
@@ -199,7 +199,7 @@ describe("NCNews API testing", () => {
         .get("/api/articles/98/comments")
         .expect(404)
         .then(({ body }) => {
-          expect(body.msg).toBe("Article not found");
+          expect(body.msg).toBe("Article 98 was not found");
         });
     });
   });
@@ -246,7 +246,7 @@ describe("NCNews API testing", () => {
         .send(newComment)
         .expect(404)
         .then((response) => {
-          expect(response.body.msg).toBe("Article not found");
+          expect(response.body.msg).toBe("Article 5256261 was not found");
         });
     });
     test("returns 'Bad request' for comments with wrong keys i.e not username/body", () => {
@@ -325,7 +325,7 @@ describe("NCNews API testing", () => {
         .send({ inc_votes: 20 })
         .expect(404)
         .then((res) => {
-          expect(res.body.msg).toBe("Article not found");
+          expect(res.body.msg).toBe("Article 42152 was not found");
         });
     });
     test("returns 'Bad Request' and the status code 400 for an invalid paths", () => {
