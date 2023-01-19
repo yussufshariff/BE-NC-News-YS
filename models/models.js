@@ -25,7 +25,7 @@ exports.fetchArticles = (topic, sort_by = "created_at", order = "desc") => {
   ) {
     return Promise.reject({
       status: 400,
-      message: "Query request is invalid.",
+      msg: "Query request is invalid.",
     });
   }
 
