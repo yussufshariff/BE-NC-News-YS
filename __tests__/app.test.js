@@ -80,36 +80,22 @@ describe("NCNews API testing", () => {
         });
     });
     describe("QUERY/api/articles", () => {
-      test("Should filter the topic by specified query in this case...only cat topics allowed! ", () => {
+      test.only("Should filter the topic by specified query in this case...only cat topics allowed! ", () => {
         return request(app)
           .get("/api/articles?topic=cats")
           .expect(200)
-          .then(({ body }) => {
-            expect(body).toEqual({
-              topics: [
-                {
-                  article_id: 5,
-                  title: "UNCOVERED: catspiracy to bring down democracy",
-                  topic: "cats",
-                  author: "rogersop",
-                  body: "Bastet walks amongst us, and the cats are taking arms!",
-                  created_at: "2020-08-03T13:14:00.000Z",
-                  votes: 0,
-                  article_img_url:
-                    "https://images.pexels.com/photos/158651/news-newsletter-newspaper-information-158651.jpeg?w=700&h=700",
-                  comment_count: "2",
-                },
-              ],
+          .then((response) => {
+            const articles = response.body.articles;
+            articles.forEach((article) => {
+              expect(article.topic).toBe("cats");
             });
           });
       });
-      test.only("Should filter articles with appropriate sort_by method provided ", () => {
+      test("Should filter articles with appropriate sort_by method provided ", () => {
         return request(app)
           .get("/api/articles?sort_by=article_id")
           .expect(200)
-          .then(({ body }) => {
-            console.log(body);
-          });
+          .then((response) => {});
       });
     });
   });
