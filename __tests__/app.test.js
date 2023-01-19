@@ -91,14 +91,12 @@ describe("NCNews API testing", () => {
             });
           });
       });
-      test("sort articles by article id in descending order  ", () => {
+      test.only("sort articles by article id in descending order  ", () => {
         return request(app)
           .get("/api/articles?sort_by=article_id")
           .expect(200)
           .then(({ body: { articles } }) => {
-            expect(articles[0].article_id).toBeGreaterThan(
-              articles[articles.length - 1].article_id
-            );
+            expect(articles).toBeSortedBy("article_id", { descending: true });
           });
       });
       test("be able to specify an article order i.e ascending or descending ", () => {
@@ -106,9 +104,7 @@ describe("NCNews API testing", () => {
           .get("/api/articles?sort_by=article_id&&order=asc")
           .expect(200)
           .then(({ body: { articles } }) => {
-            expect(articles[0].article_id).toBeLessThan(
-              articles[articles.length - 1].article_id
-            );
+            expect(articles).toBeSortedBy("article_id", { descending: false });
           });
       });
       test("return 'Query request invalid!' for invalid sort by query or order", () => {
