@@ -4,6 +4,7 @@ const {
   fetchArticlesByID,
   fetchComments,
   postComments,
+  alterVotes,
 } = require("../models/models");
 
 exports.getAllTopics = (request, response, next) => {
@@ -56,6 +57,19 @@ exports.addComment = (request, response, next) => {
     })
     .then((newComment) => {
       response.status(201).send({ newComment });
+    })
+    .catch(next);
+};
+
+exports.updateVotes = (request, response, next) => {
+  const { article_id } = request.params;
+  const { inc_votes } = request.body;
+  fetchArticlesByID(article_id)
+    .then(() => {
+      return alterVotes(article_id, inc_votes);
+    })
+    .then((article) => {
+      response.status(200).send({ article });
     })
     .catch(next);
 };

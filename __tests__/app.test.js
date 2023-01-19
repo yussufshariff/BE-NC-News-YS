@@ -11,8 +11,8 @@ afterAll(() => {
   db.end();
 });
 
-describe("API testing", () => {
-  describe("/api/topics", () => {
+describe("NCNews API testing", () => {
+  describe("GET/api/topics", () => {
     test("returns an array of topics with the properties of slug and description", () => {
       return request(app)
         .get("/api/topics")
@@ -38,7 +38,7 @@ describe("API testing", () => {
         });
     });
   });
-  describe("api/articles", () => {
+  describe("GET/api/articles", () => {
     test("returns an array of articles with the appropriates", () => {
       return request(app)
         .get("/api/articles")
@@ -80,7 +80,7 @@ describe("API testing", () => {
         });
     });
   });
-  describe("/api/articles/:article_id", () => {
+  describe("GET/api/articles/:article_id", () => {
     test("return correct article when passed an article id ", () => {
       return request(app)
         .get("/api/articles/1")
@@ -111,7 +111,7 @@ describe("API testing", () => {
         });
     });
   });
-  describe("/api/articles/:article_id/comments", () => {
+  describe("GET/api/articles/:article_id/comments", () => {
     test("returns an array of comments with appropriate properties", () => {
       return request(app)
         .get("/api/articles/3/comments")
@@ -156,7 +156,7 @@ describe("API testing", () => {
         });
     });
   });
-  describe("POST /api/articles/:article_id/comments", () => {
+  describe("POST/api/articles/:article_id/comments", () => {
     const newComment = { username: "icellusedkars", body: "It's snowing!" };
     test("returns posted comment with username and body", () => {
       return request(app)
@@ -222,6 +222,63 @@ describe("API testing", () => {
         .expect(400)
         .then((response) => {
           expect(response.body.msg).toBe("Bad Request");
+        });
+    });
+  });
+  describe("PATCH/api/articles/:article_id", () => {
+    test("updates article with correct vote count incremented by 100 ", () => {
+      const votes = { inc_votes: 100 };
+      return request(app)
+        .patch("/api/articles/1")
+        .send(votes)
+        .expect(200)
+        .then((response) => {
+          expect(response.body).toEqual({
+            article: [
+              {
+                article_id: 1,
+                title: "Living in the shadow of a great man",
+                topic: "mitch",
+                author: "butter_bridge",
+                body: "I find this existence challenging",
+                created_at: "2020-07-09T20:11:00.000Z",
+                votes: 200,
+                article_img_url:
+                  "https://images.pexels.com/photos/158651/news-newsletter-newspaper-information-158651.jpeg?w=700&h=700",
+              },
+            ],
+          });
+        });
+    });
+    test("updates article with correct vote count decremented by 73 ", () => {
+      const votes = { inc_votes: -73 };
+      return request(app)
+        .patch("/api/articles/1")
+        .send(votes)
+        .expect(200)
+        .then((response) => {
+          const articleTest = response.body.article;
+          articleTest.forEach((element) => {
+            expect(element.votes).toBe(27);
+          });
+        });
+    });
+    test("returns 'Bad request' for incorrect body requests", () => {
+      return request(app)
+        .patch(`/api/articles/1`)
+        .send({ test_votes: false })
+        .expect(400)
+        .then((response) => {
+          expect(response.body.msg).toBe("Bad Request");
+        });
+    });
+    test("returns 'Article not found' and the status code 404 for articles not in the database", () => {
+      return request(app)
+        .patch(`/api/articles/42152`)
+        .send({ inc_votes: 20 })
+        .expect(404)
+        .then((res) => {
+          expect(res.body.msg).toBe("Article not found");
         });
     });
   });
