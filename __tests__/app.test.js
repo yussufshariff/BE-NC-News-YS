@@ -374,7 +374,7 @@ describe("NCNews API testing", () => {
           expect(response.noContent).toBe(true);
         });
     });
-    test("After a comment is deleted we should expect a 404 error code as the comment shouldnt exist", () => {
+    test("after a comment is deleted we should expect a 404 error code as the comment shouldn't exist", () => {
       return request(app)
         .get("/api/comments/1")
         .expect(404)
@@ -387,8 +387,15 @@ describe("NCNews API testing", () => {
         .delete("/api/comments/412")
         .expect(404)
         .then((response) => {
-          console.log(response);
           expect(response.body.msg).toBe(`Comment 412 was not found`);
+        });
+    });
+    test("returns 'Bad Request' when trying to delete with a word instead of a number", () => {
+      return request(app)
+        .delete("/api/comments/dawnblade")
+        .expect(400)
+        .then((response) => {
+          expect(response.body.msg).toBe(`Bad Request`);
         });
     });
   });
