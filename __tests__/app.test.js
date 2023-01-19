@@ -382,5 +382,13 @@ describe("NCNews API testing", () => {
           expect(response.body.msg).toBe("URL not found");
         });
     });
+    test.only("returns 'Bad request' when you try to delete with wrong data type", () => {
+      return request(app)
+        .delete("/api/comments/vegeta")
+        .expect(400)
+        .then((response) => {
+          expect(response.body.msg).toBe("Bad Request");
+        });
+    });
   });
 });
