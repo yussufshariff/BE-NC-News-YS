@@ -6,6 +6,7 @@ const {
   postComments,
   alterVotes,
   fetchUsers,
+  fetchQuery,
 } = require("../models/models");
 
 exports.getAllTopics = (request, response, next) => {
@@ -19,9 +20,10 @@ exports.getAllTopics = (request, response, next) => {
 };
 
 exports.getAllArticles = (request, response, next) => {
-  fetchArticles()
-    .then((topics) => {
-      response.status(200).send({ topics });
+  const { topic, sort_by, order } = request.query;
+  fetchArticles(topic, sort_by, order)
+    .then((articles) => {
+      response.status(200).send({ articles });
     })
     .catch((error) => {
       next(error);

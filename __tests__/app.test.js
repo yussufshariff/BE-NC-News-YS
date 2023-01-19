@@ -44,9 +44,9 @@ describe("NCNews API testing", () => {
         .get("/api/articles")
         .expect(200)
         .then(({ body }) => {
-          expect(body.topics).toHaveLength(12);
-          body.topics.forEach((topic) => {
-            expect(topic).toEqual(
+          expect(body.articles).toHaveLength(12);
+          body.articles.forEach((article) => {
+            expect(article).toEqual(
               expect.objectContaining({
                 article_id: expect.any(Number),
                 article_img_url: expect.any(String),
@@ -66,18 +66,64 @@ describe("NCNews API testing", () => {
       return request(app)
         .get("/api/articles")
         .expect(200)
-        .then(({ body: { topics } }) => {
-          expect(topics).toBeSorted({ descending: true });
+        .then(({ body: { articles } }) => {
+          expect(articles).toBeSorted({ descending: true });
         });
     });
     test("comment count should be different according to the total comments in any given article ", () => {
       return request(app)
         .get("/api/articles")
         .expect(200)
-        .then(({ body: { topics } }) => {
-          expect(topics[5].comment_count).toBe("11");
-          expect(topics[topics.length - 1].comment_count).toBe("0");
+        .then(({ body: { articles } }) => {
+          expect(articles[5].comment_count).toBe("11");
+          expect(articles[articles.length - 1].comment_count).toBe("0");
         });
+    });
+    describe("QUERY/api/articles", () => {
+      test("return filter the topic by specified query in this case...only cat topics allowed! ", () => {
+        return request(app)
+          .get("/api/articles?topic=cats")
+          .expect(200)
+          .then((response) => {
+            const articles = response.body.articles;
+            expect(articles.length).toBe(1);
+            articles.forEach((article) => {
+              expect(article.topic).toBe("cats");
+            });
+          });
+      });
+      test("sort articles by article id in descending order  ", () => {
+        return request(app)
+          .get("/api/articles?sort_by=article_id")
+          .expect(200)
+          .then(({ body: { articles } }) => {
+            expect(articles).toBeSortedBy("article_id", { descending: true });
+          });
+      });
+      test("be able to specify an article order i.e ascending or descending ", () => {
+        return request(app)
+          .get("/api/articles?topic=mitch&&sort_by=article_id&&order=asc")
+          .expect(200)
+          .then(({ body: { articles } }) => {
+            expect(articles).toBeSortedBy("article_id", { descending: false });
+          });
+      });
+      test("return 'Query request invalid!' for invalid sort by", () => {
+        return request(app)
+          .get("/api/articles?sort_by=banana")
+          .expect(400)
+          .then((response) => {
+            expect(response.body.msg).toBe("Query request is invalid.");
+          });
+      });
+      test("return 'Query request invalid!' for invalid order", () => {
+        return request(app)
+          .get("/api/articles?order=Goku")
+          .expect(400)
+          .then((response) => {
+            expect(response.body.msg).toBe("Query request is invalid.");
+          });
+      });
     });
   });
   describe("GET/api/articles/:article_id", () => {
