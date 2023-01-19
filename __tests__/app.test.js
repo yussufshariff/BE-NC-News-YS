@@ -44,9 +44,9 @@ describe("NCNews API testing", () => {
         .get("/api/articles")
         .expect(200)
         .then(({ body }) => {
-          expect(body.topics).toHaveLength(12);
-          body.topics.forEach((topic) => {
-            expect(topic).toEqual(
+          expect(body.articles).toHaveLength(12);
+          body.articles.forEach((article) => {
+            expect(article).toEqual(
               expect.objectContaining({
                 article_id: expect.any(Number),
                 article_img_url: expect.any(String),
@@ -66,17 +66,17 @@ describe("NCNews API testing", () => {
       return request(app)
         .get("/api/articles")
         .expect(200)
-        .then(({ body: { topics } }) => {
-          expect(topics).toBeSorted({ descending: true });
+        .then(({ body: { articles } }) => {
+          expect(articles).toBeSorted({ descending: true });
         });
     });
     test("comment count should be different according to the total comments in any given article ", () => {
       return request(app)
         .get("/api/articles")
         .expect(200)
-        .then(({ body: { topics } }) => {
-          expect(topics[5].comment_count).toBe("11");
-          expect(topics[topics.length - 1].comment_count).toBe("0");
+        .then(({ body: { articles } }) => {
+          expect(articles[5].comment_count).toBe("11");
+          expect(articles[articles.length - 1].comment_count).toBe("0");
         });
     });
     describe("QUERY/api/articles", () => {
@@ -91,7 +91,7 @@ describe("NCNews API testing", () => {
             });
           });
       });
-      test.only("Should sort articles by article id in descending order  ", () => {
+      test("Should sort articles by article id in descending order  ", () => {
         return request(app)
           .get("/api/articles?sort_by=article_id")
           .expect(200)

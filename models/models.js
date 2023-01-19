@@ -1,5 +1,4 @@
 const db = require("../db/connection");
-const articles = require("../db/data/test-data/articles");
 
 exports.fetchTopics = () => {
   return db.query(`SELECT * FROM topics`).then(({ rows: topics }) => {
@@ -8,6 +7,28 @@ exports.fetchTopics = () => {
 };
 exports.fetchArticles = (topic, sort_by = "created_at", order = "desc") => {
   const queryValues = [];
+  const orderQueries = ["asc", "desc"];
+  const acceptedSortingQuery = [
+    "article_id",
+    "title",
+    "topic",
+    "author",
+    "body",
+    "votes",
+    "created_at",
+    "comment_count",
+  ];
+
+  if (
+    !acceptedSortingQuery.includes(sort_by) ||
+    !orderQueries.includes(order)
+  ) {
+    return Promise.reject({
+      status: 400,
+      message: "Query request is invalid.",
+    });
+  }
+
   let queryString = `SELECT articles.* , COUNT(comments.article_id) AS comment_count FROM articles 
   LEFT JOIN comments ON articles.article_id = comments.article_id 
   `;
