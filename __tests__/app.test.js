@@ -369,5 +369,13 @@ describe("NCNews API testing", () => {
     test.only("deletes the comment when given and id and responds with status 204", () => {
       return request(app).delete("/api/comments/1").expect(204);
     });
+    test.only("After a comment is deleted we should expect a 404 error code as the comment shouldnt exist", () => {
+      return request(app)
+        .get("/api/comments/1")
+        .expect(404)
+        .then((response) => {
+          expect(response.body.msg).toBe("URL not found");
+        });
+    });
   });
 });
