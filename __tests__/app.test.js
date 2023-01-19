@@ -281,5 +281,14 @@ describe("NCNews API testing", () => {
           expect(res.body.msg).toBe("Article not found");
         });
     });
+    test("returns 'Bad Request' and the status code 400 for an invalid paths", () => {
+      return request(app)
+        .patch(`/api/articles/banana`)
+        .send({ inc_votes: 20 })
+        .expect(400)
+        .then((res) => {
+          expect(res.body.msg).toBe("Bad Request");
+        });
+    });
   });
 });
