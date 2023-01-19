@@ -80,7 +80,7 @@ describe("NCNews API testing", () => {
         });
     });
     describe("QUERY/api/articles", () => {
-      test.only("Should filter the topic by specified query in this case...only cat topics allowed! ", () => {
+      test("Should filter the topic by specified query in this case...only cat topics allowed! ", () => {
         return request(app)
           .get("/api/articles?topic=cats")
           .expect(200)
@@ -91,11 +91,15 @@ describe("NCNews API testing", () => {
             });
           });
       });
-      test("Should filter articles with appropriate sort_by method provided ", () => {
+      test.only("Should sort articles by article id in descending order  ", () => {
         return request(app)
           .get("/api/articles?sort_by=article_id")
           .expect(200)
-          .then((response) => {});
+          .then(({ body: { articles } }) => {
+            expect(articles[0].article_id).toBeGreaterThan(
+              articles[articles.length - 1].article_id
+            );
+          });
       });
     });
   });
