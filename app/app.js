@@ -10,6 +10,7 @@ const {
   updateVotes,
   getAllUsers,
   removeComment,
+  getAPIinfo,
 } = require("../controllers/controllers");
 app.use(express.json());
 
@@ -21,6 +22,8 @@ app.post("/api/articles/:article_id/comments", addComment);
 app.patch("/api/articles/:article_id", updateVotes);
 app.get("/api/users", getAllUsers);
 app.delete("/api/comments/:comment_id", removeComment);
+
+app.get("/api/", getAPIinfo);
 
 app.use((error, request, response, next) => {
   if (error.status) {
