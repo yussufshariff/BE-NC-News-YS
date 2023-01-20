@@ -3,6 +3,7 @@ const db = require("../db/connection");
 const testData = require("../db/data/test-data");
 const seed = require("../db/seeds/seed");
 const { app } = require("../app/app");
+const endpointsJSON = require("../endpoints.json");
 
 beforeEach(() => {
   return seed(testData);
@@ -400,12 +401,12 @@ describe("NCNews API testing", () => {
     });
   });
   describe("GET/api/info", () => {
-    test.only("Returns a json representation of all the endpoints within the api ", () => {
+    test("Returns a json representation of all the endpoints within the api ", () => {
       return request(app)
         .get("/api/")
         .expect(200)
         .then((response) => {
-          console.log(response.body);
+          expect(response.body).toEqual(endpointsJSON);
         });
     });
   });
