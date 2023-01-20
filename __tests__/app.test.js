@@ -143,9 +143,10 @@ describe("NCNews API testing", () => {
               votes: 100,
               article_img_url:
                 "https://images.pexels.com/photos/158651/news-newsletter-newspaper-information-158651.jpeg?w=700&h=700",
+              comment_count: "11",
             },
           });
-          expect(Object.keys(body.articles)).toHaveLength(8);
+          expect(Object.keys(body.articles)).toHaveLength(9);
         });
     });
     test("for articles with non existent ids we should expect a 404 error", () => {
@@ -153,7 +154,7 @@ describe("NCNews API testing", () => {
         .get("/api/articles/4311462")
         .expect(404)
         .then(({ body }) => {
-          expect(body.msg).toBe("Article not found");
+          expect(body.msg).toBe("Article 4311462 was not found");
         });
     });
   });
@@ -198,7 +199,7 @@ describe("NCNews API testing", () => {
         .get("/api/articles/98/comments")
         .expect(404)
         .then(({ body }) => {
-          expect(body.msg).toBe("Article not found");
+          expect(body.msg).toBe("Article 98 was not found");
         });
     });
   });
@@ -245,7 +246,7 @@ describe("NCNews API testing", () => {
         .send(newComment)
         .expect(404)
         .then((response) => {
-          expect(response.body.msg).toBe("Article not found");
+          expect(response.body.msg).toBe("Article 5256261 was not found");
         });
     });
     test("returns 'Bad request' for comments with wrong keys i.e not username/body", () => {
@@ -324,7 +325,7 @@ describe("NCNews API testing", () => {
         .send({ inc_votes: 20 })
         .expect(404)
         .then((res) => {
-          expect(res.body.msg).toBe("Article not found");
+          expect(res.body.msg).toBe("Article 42152 was not found");
         });
     });
     test("returns 'Bad Request' and the status code 400 for an invalid paths", () => {
@@ -361,6 +362,40 @@ describe("NCNews API testing", () => {
         .expect(404)
         .then(({ body }) => {
           expect(body.msg).toBe("URL not found");
+        });
+    });
+  });
+  describe("DELETE/api/comments/id", () => {
+    test("deletes the comment when given and id and responds with status 204", () => {
+      return request(app)
+        .delete("/api/comments/1")
+        .expect(204)
+        .then((response) => {
+          expect(response.noContent).toBe(true);
+        });
+    });
+    test("after a comment is deleted we should expect a 404 error code as the comment shouldn't exist", () => {
+      return request(app)
+        .get("/api/comments/1")
+        .expect(404)
+        .then((response) => {
+          expect(response.body.msg).toBe("URL not found");
+        });
+    });
+    test("returns 'Comment not found' when you try to delete a non existent comment", () => {
+      return request(app)
+        .delete("/api/comments/412")
+        .expect(404)
+        .then((response) => {
+          expect(response.body.msg).toBe(`Comment 412 was not found`);
+        });
+    });
+    test("returns 'Bad Request' when trying to delete with a word instead of a number", () => {
+      return request(app)
+        .delete("/api/comments/dawnblade")
+        .expect(400)
+        .then((response) => {
+          expect(response.body.msg).toBe(`Bad Request`);
         });
     });
   });
