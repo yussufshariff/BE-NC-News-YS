@@ -84,7 +84,7 @@
     }
   },
   "POST /api/articles/:article_id/comments": {
-    "description": "serves an array of comments from an article",
+    "description": "serves an array of new comments added to article",
     "queries": [],
     "parameters": ["article_id"],
     "exampleBody": {
@@ -105,7 +105,7 @@
     }
   },
   "PATCH/api/articles/:article_id": {
-    "description": "updates article with correct vote count incremented or decremented by b=given number",
+    "description": "updates article with correct vote count incremented or decremented by by given number",
     "queries": [],
     "parameters": ["article_id"],
     "exampleBody": {
