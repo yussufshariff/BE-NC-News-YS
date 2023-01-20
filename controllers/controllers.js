@@ -6,10 +6,11 @@ const {
   postComments,
   alterVotes,
   fetchUsers,
-  fetchQuery,
   deleteComment,
   fetchCommentsByID,
 } = require("../models/models");
+
+const fs = require("fs/promises");
 
 exports.getAllTopics = (request, response, next) => {
   fetchTopics()
@@ -97,4 +98,10 @@ exports.removeComment = (request, response, next) => {
       });
     })
     .catch(next);
+};
+
+exports.getAPIinfo = (request, response, next) => {
+  fs.readFile("./endpoints.json", "utf-8").then((data) => {
+    response.status(200).send(JSON.parse(data));
+  });
 };
