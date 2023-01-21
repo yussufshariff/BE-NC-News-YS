@@ -1,6 +1,6 @@
 const express = require("express");
 
-const apiRouter = require("../routes/api-router");
+const apiRouter = require("../routes/endpoints-router");
 const articlesRouter = require("../routes/articles-router");
 const usersRouter = require("../routes/users-router");
 const topicsRouter = require("../routes/topics-router");
