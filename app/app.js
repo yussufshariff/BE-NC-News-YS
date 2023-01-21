@@ -1,4 +1,5 @@
 const express = require("express");
+const apiRouter = require("../routes/api-router");
 const app = express();
 const {
   getAllTopics,
@@ -12,6 +13,7 @@ const {
   getAPIinfo,
 } = require("../controllers/controllers");
 app.use(express.json());
+app.use("/api", apiRouter);
 
 app.get("/api/topics", getAllTopics);
 app.get("/api/articles", getAllArticles);
