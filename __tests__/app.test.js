@@ -14,7 +14,7 @@ afterAll(() => {
 
 describe("NCNews API testing", () => {
   describe("GET/api/topics", () => {
-    test("returns an array of topics with the properties of slug and description", () => {
+    test.only("returns an array of topics with the properties of slug and description", () => {
       return request(app)
         .get("/api/topics")
         .expect(200)
