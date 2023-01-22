@@ -410,4 +410,21 @@ describe("NCNews API testing", () => {
         });
     });
   });
+  describe("GET/api/users/:username", () => {
+    test("Returns a given user when passed a username ", () => {
+      return request(app)
+        .get("/api/users/rogersop")
+        .expect(200)
+        .then((response) => {
+          expect(response.body).toEqual({
+            user: {
+              username: "rogersop",
+              name: "paul",
+              avatar_url:
+                "https://avatars2.githubusercontent.com/u/24394918?s=400&v=4",
+            },
+          });
+        });
+    });
+  });
 });
