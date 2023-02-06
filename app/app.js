@@ -1,4 +1,5 @@
 const express = require("express");
+const cors = require("cors");
 
 const apiRouter = require("../routes/endpoints-router");
 const articlesRouter = require("../routes/articles-router");
